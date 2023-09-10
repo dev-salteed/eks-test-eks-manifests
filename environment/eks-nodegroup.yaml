@@ -1,0 +1,26 @@
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: eks-small # 생성할 EKS 클러스터명
+  region: ap-northeast-2 # 클러스터를 생성할 리전
+
+managedNodeGroups:
+  - name: node-group-spot # 클러스터의 노드 그룹명
+    instanceType: t3a.large # 클러스터 워커 노드의 인스턴스 타입
+    desiredCapacity: 1
+    maxsize: 2 # 클러스터 워커 노드의 최대 갯수
+    volumeSize: 20 # 클러스터 워커 노드의 EBS 용량 (단위: GiB)
+    spot: true # 클러스터 워커 노드의 스팟 인스턴스 사용 여부
+
+    privateNetworking: true
+    ssh:
+      enableSsm: true
+    iam:
+      withAddonPolicies:
+        imageBuilder: true # Amazon ECR에 대한 권한 추가
+        albIngress: true # albIngress에 대한 권한 추가
+        cloudWatch: true # cloudWatch에 대한 권한 추가
+        autoScaler: true # auto scaling에 대한 권한 추가
+        ebs: true # EBS CSI Driver에 대한 권한 추가
